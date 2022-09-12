@@ -17,9 +17,9 @@ to be added.
 
 All project documents are in the [Project Wiki](../../wiki/Home).
 
-- [Vision Statement](../../ku-polls/wiki/Vision-Statement)
-- [Requirements](../../ku-polls/wiki/Requirements)
-- [Development Plan](../../ku-polls/wiki/Development%20Plan)
-- [Iteration 1 Plan](../../ku-polls/wiki/Iteration%201%20Plan)
+- [Vision Statement](../../wiki/Vision-Statement)
+- [Requirements](../../wiki/Requirements)
+- [Development Plan](../../wiki/Development%20Plan)
+- [Iteration 1 Plan](../../wiki/Iteration%201%20Plan)
 
 [django-tutorial]: TODO-write-the-tutorial-URL-here
