@@ -23,6 +23,38 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
 
+    def test_is_published_recent_question(self):
+        start_time = timezone.localtime() - datetime.timedelta(days=1)
+        recent_question = Question(pub_date=start_time)
+        self.assertIs(recent_question.is_published(), True)
+
+    def test_is_published_future_question(self):
+        start_time = timezone.localtime() + datetime.timedelta(days=8)
+        recent_question = Question(pub_date=start_time)
+        self.assertIs(recent_question.is_published(), False)
+
+    def test_can_vote_pub_date_in_the_future(self):
+        time = timezone.localtime() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.can_vote(), False)
+
+    def test_can_vote_exactly_pub_date_or_end_date(self):
+        start_time = timezone.localtime() - datetime.timedelta(days=7)
+        end_time = timezone.localtime() + datetime.timedelta(days=15)
+        recent_question = Question(pub_date=start_time, end_time=end_time)
+        self.assertIs(recent_question.can_vote(), True)
+
+    def test_can_vote_after_end_date(self):
+        start_time = timezone.localtime() - datetime.timedelta(days=7)
+        end_time = timezone.localtime() - datetime.timedelta(days=5)
+        after_question = Question(pub_date=start_time, end_time=end_time)
+        self.assertIs(after_question.can_vote(), False)
+
+    def test_can_vote_poll_no_end_date(self):
+        time = timezone.localtime()
+        no_end_date_question = Question(pub_date=time)
+        self.assertIs(no_end_date_question.can_vote(), True)
+
 
 def create_question(question_text, days):
     time = timezone.now() + datetime.timedelta(days=days)
