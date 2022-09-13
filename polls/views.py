@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
 from .models import Question, Choice
 
 
@@ -21,6 +22,21 @@ class DetailView(generic.DetailView):
 
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+    def get(self, request, pk):
+        redirect = HttpResponseRedirect(reverse('polls:index'))
+        try:
+            question = get_object_or_404(Question, pk=pk)
+        except IndexError:
+            messages.error(request, 'Index was not found')
+            return redirect
+        except Http404:
+            messages.error(request, 'Http404 was not found')
+            return redirect
+        if question.can_vote() is False:
+            messages.error(request, 'This question is not open for vote yet')
+            return redirect
+        return super().get(request, pk=pk)
 
 
 class ResultsView(generic.DetailView):
