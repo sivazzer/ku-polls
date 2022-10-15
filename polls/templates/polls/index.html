@@ -2,12 +2,25 @@
 
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 
+<h1>KU-polls</h1>
 {% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
+{% for question in latest_question_list %}
+<div class="show-question">
+    {% if question.can_vote %}
+    <p>
+        <button class="btn-result"><a class="see-result-question" href="{% url 'polls:results' question.id %}">see
+                result</a></button>
+        <a href="{% url 'polls:detail' question.id %}" style="color: #6E85B7;">{{ question.question_text }}</a>
+    </p>
+    {% elif not question.can_vote %}
+    <p>
+        <button class="btn-result"><a class="see-result-question" href="{% url 'polls:results' question.id %}">see
+                result</a></button>
+        {{ question.question_text }}
+    </p>
+    {% endif %}
+</div>
+{% endfor %}
 {% else %}
-    <p>No polls are available.</p>
+<p>No polls are available.</p>
 {% endif %}
