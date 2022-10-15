@@ -23,6 +23,22 @@ class DetailView(generic.DetailView):
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+    def get(self, request, pk):
+        """Excludes any questions that aren't published yet and except error."""
+        redirect = HttpResponseRedirect(reverse('polls:index'))
+        try:
+            self.question = get_object_or_404(Question, pk=pk)
+        except IndexError:
+            messages.error(request, 'Index not found')
+            return redirect
+        except Http404:
+            messages.error(request, 'Http404 not found')
+            return redirect
+        if not self.question.can_vote():
+            messages.error(request, "This question can't vote")
+            return redirect
+        return super().get(request, pk=pk)
+
 
 class ResultsView(generic.DetailView):
     model = Question
