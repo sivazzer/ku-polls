@@ -9,6 +9,7 @@ class Question(models.Model):
     """
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
+    end_date = models.DateTimeField("ending date", default=None, null=True)
 
     def __str__(self):
         """return the question text"""
@@ -20,6 +21,18 @@ class Question(models.Model):
         """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
+
+    def is_published(self):
+        """check if the current date is on or after question's publication date."""
+        now_time = timezone.localtime()
+        return now_time >= self.pub_date
+
+    def can_vote(self):
+        """check if voting is allowed for this question."""
+        now_time = timezone.localtime()
+        if self.end_date is None and self.pub_date <= now_time:
+            return True
+        return self.pub_date <= now_time <= self.end_date
 
 
 class Choice(models.Model):

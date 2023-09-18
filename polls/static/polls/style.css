@@ -1,6 +1,11 @@
-li a {
-    color: green;
-}
+@import url("https://fonts.googleapis.com/css?family=Merriweather")
+
+
 body {
     background: white url("images/background.png") no-repeat;
+}
+
+h1 {
+     text-align: center;
+     font-family: "Merriweather", serif;
 }

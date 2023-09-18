@@ -33,6 +33,51 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
 
+    def test_is_published_future_question(self):
+        """is_published() return False if the current date is before the question's publication date"""
+        time = timezone.now() + datetime.timedelta(hours=23, minutes=59)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.is_published(), False)
+
+    def test_is_published_past_question(self):
+        """is_published() return True if the current date is after the question's publication date"""
+        time = timezone.now() - datetime.timedelta(hours=23, minutes=59)
+        past_question = Question(pub_date=time)
+        self.assertIs(past_question.is_published(), True)
+
+    def test_is_published_recent_question(self):
+        """is_published() return True if the current date is the same as the question's publication date."""
+        time = timezone.now()
+        recent_question = Question(pub_date=time)
+        self.assertIs(recent_question.is_published(), True)
+
+    def test_can_vote_end_date_is_none(self):
+        """can_vote() returns True if end date is None."""
+        time = timezone.localtime()
+        question = Question(pub_date=time)
+        self.assertIsNone(question.end_date)
+        self.assertIs(question.can_vote(), True)
+
+    def test_can_vote_is_pub_date(self):
+        """can_vote() returns True if current date is question's publication date."""
+        recent_time = timezone.localtime()
+        recent_question = Question(pub_date=recent_time)
+        self.assertIs(recent_question.can_vote(), True)
+
+    def test_can_vote_before_end_date(self):
+        """can_vote() returns True if current date is before the end date of the question."""
+        before_time = timezone.localtime() - datetime.timedelta(hours=46, minutes=59)
+        end_time = timezone.localtime() + datetime.timedelta(hours=46, minutes=59)
+        question = Question(pub_date=before_time, end_date=end_time)
+        self.assertIs(question.can_vote(), True)
+
+    def test_cannot_vote_after_end_date(self):
+        """can_vote() returns False if current date is after the end date of the question."""
+        time = timezone.localtime()
+        end_time = timezone.localtime() - datetime.timedelta(hours=46, minutes=59)
+        question = Question(pub_date=time, end_date=end_time)
+        self.assertIs(question.can_vote(), False)
+
 
 def create_question(question_text, days):
     """
