@@ -1,3 +1,5 @@
+[![Django Unit tests and Flake8](https://github.com/sivazzer/ku-polls/actions/workflows/python-app.yml/badge.svg)](https://github.com/sivazzer/ku-polls/actions/workflows/python-app.yml)
+
 # KU Polls: Online Survey Questions
 An application to conduct online polls and surveys based on the [Django Tutorial project](django-tutorial), with additional features.
 <br/>
