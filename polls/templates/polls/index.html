@@ -1,12 +1,30 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+<style>
+    h1 {
+        text-align: center;
+        font-family: font-family: "Merriweather", serif;
+    }
+</style>
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<h1>Welcome to KU Polls</h1>
 {% if latest_question_list %}
-    <ul>
         {% for question in latest_question_list %}
-            <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}
-            </a></li>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card" style="width: 50rem">
+                        <div class="card-body">
+                        <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
